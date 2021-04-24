@@ -7,17 +7,17 @@ from rest_framework import status
 
 # Create your views here.
 
+
 @api_view(['POST'])
 def upload_view(request):
     if request.method == 'POST':
         serializer = universal_serializer(data=request.data)
-        if serializer.is_valid():
-            image = IMAGES.objects.create(
-                photo=serializer.data['photo']
-            )
-            image.save()
-            return Response(status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        image = IMAGES.objects.create(
+            name=serializer.data['name'],
+            photo=serializer.data['photo']
+        )
+        image.save()
+        return Response(status=status.HTTP_200_OK)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -26,11 +26,10 @@ def update_view(request, pk):
     if request.method == 'PUT':
         image = IMAGES.objects.get(pk=pk)
         serializer = universal_serializer(data=request.data)
-        if serializer.is_valid():
-            image.photo = serializer.data['photo']
-            image.save()
-            return Response(status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        image.name = serializer.data['name']
+        image.photo = serializer.data['photo']
+        image.save()
+        return Response(status=status.HTTP_200_OK)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
